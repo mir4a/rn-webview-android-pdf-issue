@@ -110,6 +110,16 @@ export default function App() {
           onLoadProgress={handleOnLoadProgress}
           onLoadEnd={handleOnLoadEnd}
           enableTimeout={false}
+          onShouldStartLoadWithRequest={(request)=>{
+            console.warn('onShouldStartLoadWithRequest: ', request)
+            const {url} = request;
+            if (url.includes('Test_PDF')) {
+              setShowModalPDF(true);
+              setPdfUrl(url)
+              return false
+            }
+            return true;
+          }}
         />
       </View>
       <ModalPDF source={{uri: pdfUrl}} visible={showModalPDF} onClose={handleModalClose} />
