@@ -57,13 +57,12 @@ export default function App() {
   const webViewRef = useRef(null);
 
   const handleLoad = useCallback(
-    async ({nativeEvent}) => {
+    (syntheticEvent, handlerName) => {
+      const { nativeEvent: { url }} = syntheticEvent;
+      console.warn(`handleLoad (${handlerName}) url: ', ${url}`);
 
-      console.warn('ssss: ', nativeEvent);
-      console.warn('wwwww: ', nativeEvent.url);
-      const {url} = nativeEvent;
-      console.warn('handleLoad: ', url);
-
+      // Check if url includes specific PDF path and show it in modal
+      // this works well in iOS, but Android doesn't fire this handler
       if (url.includes('Test_PDF.pdf')) {
         setShowModalPDF(true);
         setPdfUrl(url)
@@ -71,9 +70,24 @@ export default function App() {
       }
   },[]);
 
+  const handleOnLoadStart = useCallback(
+    async (syntheticEvent) => {
+      handleLoad(syntheticEvent, 'onLoadStart');
+  }, [handleLoad]);
+
+  const handleOnLoadProgress = useCallback(
+    async (syntheticEvent) => {
+      handleLoad(syntheticEvent, 'onLoadProgress');
+  }, [handleLoad]);
+
+  const handleOnLoadEnd = useCallback(
+    async (syntheticEvent) => {
+      handleLoad(syntheticEvent, 'onLoadEnd');
+  }, [handleLoad]);
+
   const handleNavigationStateChange = useCallback(
     async ({ url }) => {
-      console.warn(url);
+      console.warn('handleNavigationStateChange url: ', url);
     }, []);
 
   const handleModalClose = useCallback(()=>{
@@ -92,9 +106,9 @@ export default function App() {
           onNavigationStateChange={handleNavigationStateChange}
           withAuthentication={false}
           source={{ uri: "https://www.mir4a.pp.ua/rn-webview-android-pdf-issue/" }}
-          onLoadStart={handleLoad}
-          onLoadProgress={handleLoad}
-          onLoadEnd={handleLoad}
+          onLoadStart={handleOnLoadStart}
+          onLoadProgress={handleOnLoadProgress}
+          onLoadEnd={handleOnLoadEnd}
           enableTimeout={false}
         />
       </View>
