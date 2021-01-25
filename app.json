@@ -1,0 +1,12 @@
+{
+  "name": "rn-webview-android-pdf-issue",
+  "displayName": "rn-webview-android-pdf-issue",
+  "expo": {
+    "name": "rn-webview-android-pdf-issue",
+    "slug": "rn-webview-android-pdf-issue",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
